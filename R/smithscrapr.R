@@ -42,13 +42,13 @@ sds_capstone <- sds |>
   html_elements("ol li:nth-child(6) .code_bubble") |>
   html_text2()
 
-sds_list <- list("core (take all)" = sds_core,
-           "programming depth (take one)" = sds_programming,
-           "statistics depth (take one)" = sds_statistics,
-           "communication (take one)" = sds_communication,
-           "application domain (take one)" = sds_application,
-           capstone = sds_capstone
-           )
+sds_list <- list(Core = sds_core,
+                 Programming = sds_programming,
+                 Statistics = sds_statistics,
+                 Communication = sds_communication,
+                 Application = sds_application,
+                 Capstone = sds_capstone
+                 )
 
 
 # input NA values to make equal length
@@ -59,10 +59,25 @@ for (i in seq_along(sds_list)) {
 # convert the list to a data frame
 sds_df <- data.frame(sds_list)
 
-# function that prints the df
-sds_req <- function() {
-  print(knitr::kable(sds_df))
-}
+# convert the data frame
+pivot_longer(
+  sds_df,
+  cols = everything(),
+  names_to = "Requirement",
+  values_to = "Class"
+) |>
+  mutate(Must = ifelse(Requirement %in% c("Core", "Capstone"), Class, NA_character_),
+         Class = replace(Class, Class == Must, NA_character_)
+         ) |>
+  select(Requirement, Must, `Choose One` = Class) |>
+  filter(!(is.na(Must) & is.na(`Choose One`))) |>
+  group_by(Requirement) |>
+  summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
+            `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
+  ) |>
+  arrange(Requirement)
 
-sds_req()
+
+
+
 

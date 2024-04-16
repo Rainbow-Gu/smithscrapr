@@ -59,3 +59,10 @@ for (i in seq_along(sds_list)) {
 # convert the list to a data frame
 sds_df <- data.frame(sds_list)
 
+# function that prints the df
+sds_req <- function() {
+  print(knitr::kable(sds_df))
+}
+
+sds_req()
+

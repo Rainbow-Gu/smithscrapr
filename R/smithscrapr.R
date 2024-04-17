@@ -2,6 +2,7 @@
 library(rvest)
 library(stringr)
 library(dplyr)
+library(tidyr)
 
 sds <- read_html("https://www.smith.edu/academics/statistical-data-sciences#statistical-and-data-sciences-major")
 
@@ -76,8 +77,6 @@ pivot_longer(
             `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
   ) |>
   arrange(Requirement)
-
-
 
 
 

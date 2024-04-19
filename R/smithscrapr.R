@@ -49,7 +49,11 @@ sds_list <- list(Core = sds_core,
                  Communication = sds_communication,
                  Application = sds_application,
                  Capstone = sds_capstone
+<<<<<<< HEAD
 )
+=======
+                 )
+>>>>>>> 780d41ba1eee928daae21df32786502767c4a903
 
 
 # input NA values to make equal length
@@ -69,7 +73,11 @@ pivot_longer(
 ) |>
   mutate(Must = ifelse(Requirement %in% c("Core", "Capstone"), Class, NA_character_),
          Class = replace(Class, Class == Must, NA_character_)
+<<<<<<< HEAD
   ) |>
+=======
+         ) |>
+>>>>>>> 780d41ba1eee928daae21df32786502767c4a903
   select(Requirement, Must, `Choose One` = Class) |>
   filter(!(is.na(Must) & is.na(`Choose One`))) |>
   group_by(Requirement) |>
@@ -213,4 +221,10 @@ econ_df <- pivot_longer(
             Choose_One = paste(Choose_One[!is.na(Choose_One)], collapse = ", "),
             Choose_Two = paste(Choose_Two[!is.na(Choose_Two)], collapse = ", ")
   ) |>
+<<<<<<< HEAD
   arrange(Requirement)s
+=======
+  arrange(Requirement)
+
+
+>>>>>>> 780d41ba1eee928daae21df32786502767c4a903

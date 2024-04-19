@@ -49,7 +49,7 @@ sds_list <- list(Core = sds_core,
                  Communication = sds_communication,
                  Application = sds_application,
                  Capstone = sds_capstone
-                 )
+)
 
 
 # input NA values to make equal length
@@ -69,7 +69,7 @@ pivot_longer(
 ) |>
   mutate(Must = ifelse(Requirement %in% c("Core", "Capstone"), Class, NA_character_),
          Class = replace(Class, Class == Must, NA_character_)
-         ) |>
+  ) |>
   select(Requirement, Must, `Choose One` = Class) |>
   filter(!(is.na(Must) & is.na(`Choose One`))) |>
   group_by(Requirement) |>
@@ -77,3 +77,140 @@ pivot_longer(
             `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
   ) |>
   arrange(Requirement)
+
+## Computer Science
+cs <- read_html("https://www.smith.edu/academics/computer-science#computer-science-courses")
+cs_intro <- cs |>
+  html_elements("#computer-science-major li:nth-child(1) li") |>
+  html_text2()
+# Remove "(S/U only)" from each string
+cs_intro <- str_remove(cs_intro, pattern = " \\(S/U only\\)")
+
+cs_core <- cs |>
+  html_elements("#computer-science-major li:nth-child(2) li") |>
+  html_text2()
+## Maybe instead of #computer-science-major, we can just use the unique
+## function variables so that we can create a function since they are
+## similar??
+cs_math <- cs |>
+  html_elements("li:nth-child(3) li") |>
+  html_text2()
+cs_math <- cs_math[8:9]
+
+cs_thoery <- cs |>
+  html_elements("li:nth-child(4) li:nth-child(1)") |>
+  html_text2()
+cs_thoery<- cs_thoery[2]
+cs_thoery <- str_remove(cs_thoery, pattern = "One CSC or SDS theory course: ")
+# Split the remaining string into a list
+cs_thoery <- str_split(cs_thoery, pattern = ",\\s*")[[1]]
+
+cs_programming <- cs |>
+  html_elements("li:nth-child(4) li:nth-child(2)") |>
+  html_text2()
+cs_programming<- cs_programming[2]
+
+cs_programming <- str_remove(cs_programming, pattern = "One CSC or SDS programming course: ")
+cs_programming <- str_split(cs_programming, pattern = ",\\s*")[[1]]
+## I am sure we can combine this to make the pattern be similar but i cannot for
+## the life of me figure out how
+
+cs_system <- cs |>
+  html_elements("#computer-science-major li li~ li+ li .sc_courseinline+ .sc_courseinline .code_bubble")|>
+  html_text2()
+
+level_200 <- cs |>
+  html_elements("li li:nth-child(4)") |>
+  html_text2()
+level_200 <- level_200[6]
+
+level_300 <- cs |>
+  html_elements("#computer-science-major li:nth-child(5)") |>
+  html_text2()
+## Function to turn our data.frames into list then into data frames???, making
+## sure our data frames are also same length as well
+cs_list <- list(Introduction = cs_intro,
+                Core = cs_core,
+                Mathematics = cs_math,
+                Theory = cs_thoery,
+                Programming = cs_programming,
+                System = cs_system,
+                Level_200 = level_200,
+                Level_300 = level_300
+)
+
+max_length <- max(sapply(cs_list, length))
+
+for (i in seq_along(cs_list)) {
+  cs_list[[i]] <- `length<-`(cs_list[[i]], max_length)
+}
+cs_df <- data.frame(cs_list)
+
+x <- pivot_longer(
+  cs_df,
+  cols = everything(),
+  names_to = "Requirement",
+  values_to = "Class"
+) |>
+  mutate(Must = ifelse(Requirement %in% c("Introduction", "Core", "Mathematics"), Class, NA_character_),
+         Class = replace(Class, Class == Must, NA_character_)
+  ) |>
+  select(Requirement, Must, `Choose One` = Class) |>
+  filter(!(is.na(Must) & is.na(`Choose One`))) |>
+  group_by(Requirement) |>
+  summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
+            `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
+  ) |>
+  arrange(Requirement)
+## For computer science I used a lot of the same code, so hopper is right about there being repetative code
+
+## For quantative economics
+
+econ <- read_html("https://www.smith.edu/academics/economics#advisers-1")
+econ_core <- econ |>
+  html_elements("pli li~ li+ li , li li li , li li:nth-child(1)") |>
+  html_text2()
+econ_core <- econ_core[6:15]
+
+econ_upper <- econ |>
+  html_elements("#economics-major p+ ol > li+ li .code_bubble") |>
+  html_text2()
+
+econ_electives <- econ |>
+  html_elements("ol:nth-child(10) > li:nth-child(3)") |>
+  html_text2()
+
+econ_seminar <- econ |>
+  html_elements("p+ ol > li:nth-child(4)") |>
+  html_text2()
+econ_list <- list(Core = econ_core,
+                  Upper_level = econ_upper,
+                  Electives = econ_electives,
+                  Seminar = econ_seminar
+)
+max_length <- max(sapply(econ_list, length))
+
+for (i in seq_along(econ_list)) {
+  cs_list[[i]] <- `length<-`(econ_list[[i]], max_length)
+}
+econ_df <- data.frame(econ_list)
+
+econ_df <- pivot_longer(
+  econ_df,
+  cols = everything(),
+  names_to = "Requirement",
+  values_to = "Class"
+) |>
+  mutate(Must = ifelse(Requirement %in% c("Core"), Class, NA_character_),
+         Choose_One = ifelse(Requirement %in% c("Seminar"), Class, NA_character_),
+         Choose_Two = ifelse(Requirement %in% c("Upper_level", "Electives"), Class, NA_character_),
+         Class = replace(Class, Class %in% c(Must, Choose_One, Choose_Two), NA_character_)
+  ) |>
+  select(Requirement, Must, Choose_One, Choose_Two) |>
+  filter(!(is.na(Must) & is.na(Choose_One) & is.na(Choose_Two))) |>
+  group_by(Requirement) |>
+  summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
+            Choose_One = paste(Choose_One[!is.na(Choose_One)], collapse = ", "),
+            Choose_Two = paste(Choose_Two[!is.na(Choose_Two)], collapse = ", ")
+  ) |>
+  arrange(Requirement)s

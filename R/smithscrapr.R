@@ -118,12 +118,12 @@ cs_system <- cs |>
   html_elements("#computer-science-major li li~ li+ li .sc_courseinline+ .sc_courseinline .code_bubble")|>
   html_text2()
 
-level_200 <- cs |>
+cs_200 <- cs |>
   html_elements("li li:nth-child(4)") |>
   html_text2()
-level_200 <- level_200[6]
+cs_200 <- cs_200[6]
 
-level_300 <- cs |>
+cs_300 <- cs |>
   html_elements("#computer-science-major li:nth-child(5)") |>
   html_text2()
 ## Function to turn our data.frames into list then into data frames???, making
@@ -134,8 +134,8 @@ cs_list <- list(Introduction = cs_intro,
                 Theory = cs_thoery,
                 Programming = cs_programming,
                 System = cs_system,
-                Level_200 = level_200,
-                Level_300 = level_300
+                Level_200 = cs_200,
+                Level_300 = cs_300
 )
 
 max_length <- max(sapply(cs_list, length))

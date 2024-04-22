@@ -68,7 +68,7 @@ pivot_longer(
 ) |>
   mutate(Must = ifelse(Requirement %in% c("Core", "Capstone"), Class, NA_character_),
          Class = replace(Class, Class == Must, NA_character_)
-         ) |>
+  ) |>
   select(Requirement, Must, `Choose One` = Class) |>
   filter(!(is.na(Must) & is.na(`Choose One`))) |>
   group_by(Requirement) |>
@@ -82,7 +82,7 @@ pivot_longer(
 pivot_df <- function (df, must) {
   choose <- c("econ_df", "ast_df")
   choose_one <- c("sds_df", "cs_df", "biochem_df")
-  df_p_longer <- pivot_longer(
+  pivot_longer(
     df,
     cols = everything(),
     names_to = "Requirement",
@@ -97,13 +97,14 @@ pivot_df <- function (df, must) {
     summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
               `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
     )
-  if (deparse(substitute(df)) %in% choose) {
-    colnames(df_p_longer)[3] <- "Choose"
+  if (df %in% choose) {
+    colnames[3] <- "Choose"
   }
-  return(df_p_longer)
+
 }
 
-ast_df <- pivot_df(ast_df, c("Core"))
+sds_df <- pivot_df(sds_df, c("Core", "Capstone"))
+ast_df <- pivot_df(ast_df, "Core")
 
 
 

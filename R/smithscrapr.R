@@ -82,7 +82,7 @@ pivot_longer(
 pivot_df <- function (df, must) {
   choose <- c("econ_df", "ast_df")
   choose_one <- c("sds_df", "cs_df", "biochem_df")
-  pivot_longer(
+  df_p_longer <- pivot_longer(
     df,
     cols = everything(),
     names_to = "Requirement",
@@ -97,14 +97,13 @@ pivot_df <- function (df, must) {
     summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
               `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
     )
-  if (df %in% choose) {
-    colnames[3] <- "Choose"
+  if (deparse(substitute(df)) %in% choose) {
+    colnames(df_p_longer)[3] <- "Choose"
   }
-
+  return(df_p_longer)
 }
 
-sds_df <- pivot_df(sds_df, c("Core", "Capstone"))
-ast_df <- pivot_df(ast_df, "Core")
+ast_df <- pivot_df(ast_df, c("Core"))
 
 
 

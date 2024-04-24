@@ -1,4 +1,3 @@
-
 library(rvest)
 library(stringr)
 library(dplyr)
@@ -92,9 +91,8 @@ cs_core <- cs |>
 ## function variables so that we can create a function since they are
 ## similar??
 cs_math <- cs |>
-  html_elements("li:nth-child(3) li") |>
+  html_elements("li:nth-child(3) li .sc_courseinline:nth-child(1) .code_bubble") |>
   html_text2()
-cs_math <- cs_math[8:9]
 
 cs_thoery <- cs |>
   html_elements("li:nth-child(4) li:nth-child(1)") |>
@@ -118,12 +116,12 @@ cs_system <- cs |>
   html_elements("#computer-science-major li li~ li+ li .sc_courseinline+ .sc_courseinline .code_bubble")|>
   html_text2()
 
-level_200 <- cs |>
+cs_200 <- cs |>
   html_elements("li li:nth-child(4)") |>
   html_text2()
-level_200 <- level_200[6]
+cs_200 <- cs_200[6]
 
-level_300 <- cs |>
+cs_300 <- cs |>
   html_elements("#computer-science-major li:nth-child(5)") |>
   html_text2()
 ## Function to turn our data.frames into list then into data frames???, making
@@ -134,8 +132,8 @@ cs_list <- list(Introduction = cs_intro,
                 Theory = cs_thoery,
                 Programming = cs_programming,
                 System = cs_system,
-                Level_200 = level_200,
-                Level_300 = level_300
+                Level_200 = cs_200,
+                Level_300 = cs_300
 )
 
 max_length <- max(sapply(cs_list, length))
@@ -154,22 +152,23 @@ x <- pivot_longer(
   mutate(Must = ifelse(Requirement %in% c("Introduction", "Core", "Mathematics"), Class, NA_character_),
          Class = replace(Class, Class == Must, NA_character_)
   ) |>
-  select(Requirement, Must, `Choose One` = Class) |>
-  filter(!(is.na(Must) & is.na(`Choose One`))) |>
+  select(Requirement, Must, `Choose` = Class) |>
+  filter(!(is.na(Must) & is.na(`Choose`))) |>
   group_by(Requirement) |>
   summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-            `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
-  ) |>
-  arrange(Requirement)
+            `Choose` = paste(`Choose`[!is.na(`Choose`)], collapse = ", ")
+  )
 ## For computer science I used a lot of the same code, so hopper is right about there being repetative code
 
 ## For quantative economics
 
 econ <- read_html("https://www.smith.edu/academics/economics#advisers-1")
 econ_core <- econ |>
-  html_elements("pli li~ li+ li , li li li , li li:nth-child(1)") |>
+  html_elements("p+ ol > li > ol > li:nth-child(4) , ol:nth-child(10) ol ol li+ li , ol:nth-child(10) ol .code_bubble") |>
   html_text2()
-econ_core <- econ_core[6:15]
+econ_core <- econ_core[!(econ_core %in% c("SDS 201", "SDS 220", "ECO 250", "ECO 253"))]
+econ_core <- unique(econ_core)
+econ_core <- str_remove(econ_core, "taken at Smith,?\\s*")
 
 econ_upper <- econ |>
   html_elements("#economics-major p+ ol > li+ li .code_bubble") |>
@@ -190,7 +189,7 @@ econ_list <- list(Core = econ_core,
 max_length <- max(sapply(econ_list, length))
 
 for (i in seq_along(econ_list)) {
-  cs_list[[i]] <- `length<-`(econ_list[[i]], max_length)
+  econ_list[[i]] <- `length<-`(econ_list[[i]], max_length)
 }
 econ_df <- data.frame(econ_list)
 
@@ -200,19 +199,15 @@ econ_df <- pivot_longer(
   names_to = "Requirement",
   values_to = "Class"
 ) |>
-  mutate(Must = ifelse(Requirement %in% c("Core"), Class, NA_character_),
-         Choose_One = ifelse(Requirement %in% c("Seminar"), Class, NA_character_),
-         Choose_Two = ifelse(Requirement %in% c("Upper_level", "Electives"), Class, NA_character_),
-         Class = replace(Class, Class %in% c(Must, Choose_One, Choose_Two), NA_character_)
+  mutate(Must = ifelse(Requirement %in% "Core", Class, NA_character_),
+         Class = replace(Class, Class == Must, NA_character_)
   ) |>
-  select(Requirement, Must, Choose_One, Choose_Two) |>
-  filter(!(is.na(Must) & is.na(Choose_One) & is.na(Choose_Two))) |>
+  select(Requirement, Must, `Choose` = Class) |>
+  filter(!(is.na(Must) & is.na(`Choose`))) |>
   group_by(Requirement) |>
   summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-            Choose_One = paste(Choose_One[!is.na(Choose_One)], collapse = ", "),
-            Choose_Two = paste(Choose_Two[!is.na(Choose_Two)], collapse = ", ")
-  ) |>
-  arrange(Requirement)
+            `Choose` = paste(`Choose`[!is.na(`Choose`)], collapse = ", ")
+  )
 
 # astronomy
 ast <- read_html("https://www.smith.edu/academics/astronomy")

@@ -178,7 +178,7 @@ for (i in seq_along(cs_list)) {
 }
 cs_df <- data.frame(cs_list)
 
-x <- pivot_longer(
+cs_df <- pivot_longer(
   cs_df,
   cols = everything(),
   names_to = "Requirement",
@@ -221,34 +221,12 @@ econ_list <- list(Core = econ_core,
                   Electives = econ_electives,
                   Seminar = econ_seminar
 )
-
 max_length <- max(sapply(econ_list, length))
 
 for (i in seq_along(econ_list)) {
   econ_list[[i]] <- `length<-`(econ_list[[i]], max_length)
 }
 econ_df <- data.frame(econ_list)
-
-# function
-get_same_length <- function(x) {
-  max_length <- max(sapply(x, length))
-  for (i in seq_along(x)) {
-    length(x[[i]]) <- max_length
-  }
-  return(x)
-}
-
-get_same_length(econ_list)
-
-# function
-list_to_df <- function(x) {
-  df <- data.frame(x)
-  return(df)
-}
-
-#
-
-econ_df <- list_to_df(econ_list)
 
 econ_df <- pivot_longer(
   econ_df,
@@ -265,7 +243,6 @@ econ_df <- pivot_longer(
   summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
             `Choose` = paste(`Choose`[!is.na(`Choose`)], collapse = ", ")
   )
-
 # astronomy
 ast <- read_html("https://www.smith.edu/academics/astronomy")
 

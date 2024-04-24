@@ -76,6 +76,41 @@ pivot_longer(
   ) |>
   arrange(Requirement)
 
+# function
+
+pivot_df <- function (df, must) {
+  choose <- c("econ_df", "ast_df")
+  choose_one <- c("sds_df", "cs_df", "biochem_df")
+  pivot_longer(
+    df,
+    cols = everything(),
+    names_to = "Requirement",
+    values_to = "Class"
+  ) |>
+    mutate(Must = ifelse(Requirement %in% must, Class, NA_character_),
+           Class = replace(Class, Class == Must, NA_character_)
+    ) |>
+    select(Requirement, Must, `Choose One` = Class) |>
+    filter(!(is.na(Must) & is.na(`Choose One`))) |>
+    group_by(Requirement) |>
+    summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
+              `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
+    )
+  if (df %in% choose) {
+    colnames[3] <- "Choose"
+  }
+
+}
+
+sds_df <- pivot_df(sds_df, c("Core", "Capstone"))
+ast_df <- pivot_df(ast_df, "Core")
+
+
+
+get_data_frame <- function(x, y) {
+
+}
+
 ## Computer Science
 cs <- read_html("https://www.smith.edu/academics/computer-science#computer-science-courses")
 cs_intro <- cs |>
@@ -186,12 +221,34 @@ econ_list <- list(Core = econ_core,
                   Electives = econ_electives,
                   Seminar = econ_seminar
 )
+
 max_length <- max(sapply(econ_list, length))
 
 for (i in seq_along(econ_list)) {
   econ_list[[i]] <- `length<-`(econ_list[[i]], max_length)
 }
 econ_df <- data.frame(econ_list)
+
+# function
+get_same_length <- function(x) {
+  max_length <- max(sapply(x, length))
+  for (i in seq_along(x)) {
+    length(x[[i]]) <- max_length
+  }
+  return(x)
+}
+
+get_same_length(econ_list)
+
+# function
+list_to_df <- function(x) {
+  df <- data.frame(x)
+  return(df)
+}
+
+#
+
+econ_df <- list_to_df(econ_list)
 
 econ_df <- pivot_longer(
   econ_df,

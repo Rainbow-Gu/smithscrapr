@@ -49,14 +49,24 @@ sds_list <- list(Core = sds_core,
                  Application = sds_application,
                  Capstone = sds_capstone)
 
-
-# input NA values to make equal length
-for (i in seq_along(sds_list)) {
-  sds_list[[i]] <- c(sds_list[[i]], rep(NA, 7 - length(sds_list[[i]])))
+# function 1
+get_same_length <- function(list) {
+  max_length <- max(sapply(list, length))
+  for (i in seq_along(list)) {
+    length(list[[i]]) <- max_length
+  }
+  return(list)
 }
 
-# convert the list to a data frame
-sds_df <- data.frame(sds_list)
+sds_list <- get_same_length(sds_list)
+
+# function 2
+list_to_df <- function(list) {
+  df <- data.frame(list, check.names = FALSE)
+  return(df)
+}
+
+sds_df <- list_to_df(sds_list)
 
 # convert the data frame
 pivot_longer(
@@ -76,11 +86,9 @@ pivot_longer(
   ) |>
   arrange(Requirement)
 
-# function
+# function 3
 
 pivot_df <- function (df, must) {
-  choose <- c("econ_df", "ast_df")
-  choose_one <- c("sds_df", "cs_df", "biochem_df")
   pivot_longer(
     df,
     cols = everything(),
@@ -90,20 +98,41 @@ pivot_df <- function (df, must) {
     mutate(Must = ifelse(Requirement %in% must, Class, NA_character_),
            Class = replace(Class, Class == Must, NA_character_)
     ) |>
-    select(Requirement, Must, `Choose One` = Class) |>
-    filter(!(is.na(Must) & is.na(`Choose One`))) |>
+    select(Requirement, Must, `Choose` = Class) |>
+    filter(!(is.na(Must) & is.na(`Choose`))) |>
     group_by(Requirement) |>
     summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-              `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
+              `Choose` = paste(`Choose`[!is.na(`Choose`)], collapse = ", ")
     )
-  if (df %in% choose) {
-    colnames[3] <- "Choose"
-  }
-
 }
 
 sds_df <- pivot_df(sds_df, c("Core", "Capstone"))
-ast_df <- pivot_df(ast_df, "Core")
+
+
+#pivot_df <- function (df, must) {
+  #choose <- c("econ_df", "ast_df")
+  #choose_one <- c("sds_df", "cs_df", "biochem_df")
+  #pivot_longer(
+    #df,
+    #cols = everything(),
+    #names_to = "Requirement",
+    #values_to = "Class"
+  #) |>
+    #mutate(Must = ifelse(Requirement %in% must, Class, NA_character_),
+           #Class = replace(Class, Class == Must, NA_character_)
+    #) |>
+    #select(Requirement, Must, `Choose One` = Class) |>
+    #filter(!(is.na(Must) & is.na(`Choose One`))) |>
+    #group_by(Requirement) |>
+    #summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
+              #`Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
+    #)
+  #if (df %in% choose) {
+    #colnames[3] <- "Choose"
+  #}
+
+#}
+
 
 
 
@@ -167,12 +196,11 @@ cs_list <- list(Introduction = cs_intro,
                 Level_300 = cs_300
 )
 
-max_length <- max(sapply(cs_list, length))
+cs_list <- get_same_length(cs_list)
 
-for (i in seq_along(cs_list)) {
-  cs_list[[i]] <- `length<-`(cs_list[[i]], max_length)
-}
-cs_df <- data.frame(cs_list)
+cs_df <- list_to_df(cs_list)
+
+cs_df <- pivot_df(cs_df, c("Introduction", "Core", "Mathematics"))
 
 x <- pivot_longer(
   cs_df,
@@ -218,33 +246,12 @@ econ_list <- list(Core = econ_core,
                   Seminar = econ_seminar
 )
 
-max_length <- max(sapply(econ_list, length))
 
-for (i in seq_along(econ_list)) {
-  econ_list[[i]] <- `length<-`(econ_list[[i]], max_length)
-}
-econ_df <- data.frame(econ_list)
-
-# function
-get_same_length <- function(list) {
-  max_length <- max(sapply(list, length))
-  for (i in seq_along(list)) {
-    length(list[[i]]) <- max_length
-  }
-  return(list)
-}
-
-get_same_length(econ_list)
-
-# function
-list_to_df <- function(list) {
-  df <- data.frame(list)
-  return(df)
-}
-
-#
+econ_list <- get_same_length(econ_list)
 
 econ_df <- list_to_df(econ_list)
+
+econ_df <- pivot_df(econ_df, c("Core"))
 
 econ_df <- pivot_longer(
   econ_df,
@@ -294,12 +301,11 @@ ast_list <- list(Core = ast_core,
                  "300" = ast_300,
                  "200/300" = ast_200_or_300)
 
-max_length_ast <- max(sapply(ast_list, length))
-for (i in seq_along(ast_list)) {
-  ast_list[[i]] <- c(ast_list[[i]], rep(NA, max_length_ast - length(ast_list[[i]])))
-}
+ast_list <- get_same_length(ast_list)
 
-ast_df <- data.frame(ast_list, check.names = FALSE)
+ast_df <- list_to_df(ast_list)
+
+ast_df <- pivot_df(ast_df, "Core")
 
 ast_df <- pivot_longer(
   ast_df,
@@ -378,12 +384,10 @@ biochem_list <- list("Foundation Bio" = biochem_fdn_bio,
                      Elective = biochem_elective
 )
 
-max_length_biochem <- max(sapply(biochem_list, length))
-for (i in seq_along(biochem_list)) {
-  biochem_list[[i]] <- c(biochem_list[[i]], rep(NA, max_length_biochem - length(biochem_list[[i]])))
-}
 
-biochem_df <- data.frame(biochem_list, check.names = FALSE)
+biochem_list <- get_same_length(biochem_list)
+biochem_df <- list_to_df(biochem_list)
+
 
 biochem_df <- pivot_longer(
   biochem_df,
@@ -403,3 +407,11 @@ biochem_df <- pivot_longer(
             `Choose one` = paste(`Choose one`[!is.na(`Choose one`)], collapse = ", ")
   ) |>
   arrange(Requirment)
+
+biochem_df <- pivot_df(biochem_df, c("Foundation Bio", "Foundation General Chem",
+                                     "Foundation Organic Chem", "Foundation Biochem",
+                                     "Upper-level Biochem"))
+
+
+
+

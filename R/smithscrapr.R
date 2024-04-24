@@ -107,10 +107,6 @@ ast_df <- pivot_df(ast_df, "Core")
 
 
 
-get_data_frame <- function(x, y) {
-
-}
-
 ## Computer Science
 cs <- read_html("https://www.smith.edu/academics/computer-science#computer-science-courses")
 cs_intro <- cs |>
@@ -230,19 +226,19 @@ for (i in seq_along(econ_list)) {
 econ_df <- data.frame(econ_list)
 
 # function
-get_same_length <- function(x) {
-  max_length <- max(sapply(x, length))
-  for (i in seq_along(x)) {
-    length(x[[i]]) <- max_length
+get_same_length <- function(list) {
+  max_length <- max(sapply(list, length))
+  for (i in seq_along(list)) {
+    length(list[[i]]) <- max_length
   }
-  return(x)
+  return(list)
 }
 
 get_same_length(econ_list)
 
 # function
-list_to_df <- function(x) {
-  df <- data.frame(x)
+list_to_df <- function(list) {
+  df <- data.frame(list)
   return(df)
 }
 

@@ -466,13 +466,6 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
                   "Advanced Lab (choose 2)" = chem_adv_lab,
                   "Electives (2-3 to reach 10)" = chem_electives)
 
-
-# input NA values to make equal length
-for (i in seq_along(chem_list)) {
-  chem_list[[i]] <- c(chem_list[[i]], rep(NA, 8 - length(chem_list[[i]])))
-}
-
-# convert the list to a data frame
-chem_df <- data.frame(chem_list, check.names = FALSE)
+chem_df <- list_to_df(chem_list)
 
 

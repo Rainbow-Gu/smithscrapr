@@ -466,6 +466,7 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
                   "Advanced Lab (choose 2)" = chem_adv_lab,
                   "Electives (2-3 to reach 10)" = chem_electives)
 
+chem_list <- get_same_length(chem_list)
 chem_df <- list_to_df(chem_list)
 
 

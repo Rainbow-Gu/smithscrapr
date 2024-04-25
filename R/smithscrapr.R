@@ -68,24 +68,6 @@ list_to_df <- function(list) {
 
 sds_df <- list_to_df(sds_list)
 
-# convert the data frame
-pivot_longer(
-  sds_df,
-  cols = everything(),
-  names_to = "Requirement",
-  values_to = "Class"
-) |>
-  mutate(Must = ifelse(Requirement %in% c("Core", "Capstone"), Class, NA_character_),
-         Class = replace(Class, Class == Must, NA_character_)
-         ) |>
-  select(Requirement, Must, `Choose One` = Class) |>
-  filter(!(is.na(Must) & is.na(`Choose One`))) |>
-  group_by(Requirement) |>
-  summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-            `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
-  ) |>
-  arrange(Requirement)
-
 # function 3
 
 pivot_df <- function (df, must) {
@@ -202,21 +184,7 @@ cs_df <- list_to_df(cs_list)
 
 cs_df <- pivot_df(cs_df, c("Introduction", "Core", "Mathematics"))
 
-x <- pivot_longer(
-  cs_df,
-  cols = everything(),
-  names_to = "Requirement",
-  values_to = "Class"
-) |>
-  mutate(Must = ifelse(Requirement %in% c("Introduction", "Core", "Mathematics"), Class, NA_character_),
-         Class = replace(Class, Class == Must, NA_character_)
-  ) |>
-  select(Requirement, Must, `Choose` = Class) |>
-  filter(!(is.na(Must) & is.na(`Choose`))) |>
-  group_by(Requirement) |>
-  summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-            `Choose` = paste(`Choose`[!is.na(`Choose`)], collapse = ", ")
-  )
+
 ## For computer science I used a lot of the same code, so hopper is right about there being repetative code
 
 ## For quantative economics
@@ -251,23 +219,8 @@ econ_list <- get_same_length(econ_list)
 
 econ_df <- list_to_df(econ_list)
 
-econ_df <- pivot_df(econ_df, c("Core"))
+econ_df <- pivot_df(econ_df, "Core")
 
-econ_df <- pivot_longer(
-  econ_df,
-  cols = everything(),
-  names_to = "Requirement",
-  values_to = "Class"
-) |>
-  mutate(Must = ifelse(Requirement %in% "Core", Class, NA_character_),
-         Class = replace(Class, Class == Must, NA_character_)
-  ) |>
-  select(Requirement, Must, `Choose` = Class) |>
-  filter(!(is.na(Must) & is.na(`Choose`))) |>
-  group_by(Requirement) |>
-  summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-            `Choose` = paste(`Choose`[!is.na(`Choose`)], collapse = ", ")
-  )
 
 # astronomy
 ast <- read_html("https://www.smith.edu/academics/astronomy")
@@ -306,23 +259,6 @@ ast_list <- get_same_length(ast_list)
 ast_df <- list_to_df(ast_list)
 
 ast_df <- pivot_df(ast_df, "Core")
-
-ast_df <- pivot_longer(
-  ast_df,
-  cols = everything(),
-  names_to = "Level",
-  values_to = "Class"
-) |>
-  mutate(Must = ifelse(Level == "Core", Class, NA_character_),
-         Class = replace(Class, Class == Must, NA_character_)
-  ) |>
-  select(Level, Must, `Choose` = Class) |>
-  filter(!(is.na(Must) & is.na(`Choose`))) |>
-  group_by(Level) |>
-  summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-            `Choose` = paste(`Choose`[!is.na(`Choose`)], collapse = ", ")
-  ) |>
-  arrange(Level)
 
 # biochem
 biochem <- read_html("https://www.smith.edu/academics/biochemistry#biochemistry-major")
@@ -387,31 +323,9 @@ biochem_list <- list("Foundation Bio" = biochem_fdn_bio,
 
 biochem_list <- get_same_length(biochem_list)
 biochem_df <- list_to_df(biochem_list)
-
-
-biochem_df <- pivot_longer(
-  biochem_df,
-  cols = everything(),
-  names_to = "Requirment",
-  values_to = "Class"
-) |>
-  mutate(Must = ifelse(Requirment %in% c("Foundation Bio", "Foundation General Chem",
-                                         "Foundation Organic Chem", "Foundation Biochem",
-                                         "Upper-level Biochem"), Class, NA_character_),
-         Class = replace(Class, Class == Must, NA_character_)
-  ) |>
-  select(Requirment, Must, `Choose one` = Class) |>
-  filter(!(is.na(Must) & is.na(`Choose one`))) |>
-  group_by(Requirment) |>
-  summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-            `Choose one` = paste(`Choose one`[!is.na(`Choose one`)], collapse = ", ")
-  ) |>
-  arrange(Requirment)
-
 biochem_df <- pivot_df(biochem_df, c("Foundation Bio", "Foundation General Chem",
                                      "Foundation Organic Chem", "Foundation Biochem",
                                      "Upper-level Biochem"))
-
 
 # Chemistry major with no pivot table
 
@@ -468,5 +382,3 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
 
 chem_list <- get_same_length(chem_list)
 chem_df <- list_to_df(chem_list)
-
-

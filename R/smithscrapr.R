@@ -413,5 +413,66 @@ biochem_df <- pivot_df(biochem_df, c("Foundation Bio", "Foundation General Chem"
                                      "Upper-level Biochem"))
 
 
+# Chemistry major with no pivot table
+
+
+chem <- read_html("https://www.smith.edu/academics/chemistry#chemistry-major")
+
+chem_intro_1a <- chem |>
+  html_elements("li ol li:nth-child(1)") |>
+  html_text2() |>
+  unique()
+
+chem_intro_1a <- chem_intro_1a[-2]
+chem_intro_1a <- unlist(strsplit(chem_intro_1a, ", "))
+chem_intro_1a <- c(chem_intro_1a[1], unlist(strsplit(chem_intro_1a[2], " and ")))
+chem_intro_1a[3] <- gsub("\\n", "", chem_intro_1a[3])
+chem_intro_1a[3] <- gsub(" or", "", chem_intro_1a[3])
+
+chem_intro_1b <- chem |>
+  html_elements("li ol li+ li") |>
+  html_text2()|>
+  unique()
+
+chem_intro_1b <- chem_intro_1b[-2]
+chem_intro_1b <- unlist(strsplit(chem_intro_1b, " and "))
+
+# choose 3
+chem_intermediate <- chem |>
+  html_elements("#chemistry-major p+ ol > li:nth-child(2)") |>
+  html_text2() |>
+  unique()
+
+chem_intermediate <- str_remove(chem_intermediate, "(.*): ")
+chem_intermediate <- unlist(strsplit(chem_intermediate, ", "))
+chem_intermediate <- c(chem_intermediate[1], unlist(strsplit(chem_intermediate[2], " and ")))
+
+# choose 2
+chem_adv_lab <- chem |>
+  html_elements("li~ li+ li span .sc_courseinline .code_bubble") |>
+  html_text2()
+
+# choose 2 or 3
+chem_electives <- chem |>
+  html_elements("#chemistry-major ul li") |>
+  html_text2()
+
+chem_electives <- c(chem_electives[1], unlist(strsplit(chem_electives[2], ", ")), chem_electives[3])
+chem_electives <-  c(chem_electives[1:5], unlist(strsplit(chem_electives[6], " or ")), chem_electives[7])
+
+chem_list <- list("Intro (Choice A)" = chem_intro_1a,
+                  "Intro (Choice B)" = chem_intro_1b,
+                  "Courses (choose 3)" = chem_intermediate,
+                  "Advanced Lab (choose 2)" = chem_adv_lab,
+                  "Electives (2-3 to reach 10)" = chem_electives)
+
+
+# input NA values to make equal length
+for (i in seq_along(chem_list)) {
+  chem_list[[i]] <- c(chem_list[[i]], rep(NA, 8 - length(chem_list[[i]])))
+}
+
+# convert the list to a data frame
+chem_df <- data.frame(chem_list, check.names = FALSE)
 
 

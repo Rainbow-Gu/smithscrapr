@@ -1,15 +1,21 @@
 Package: smithscrapr
-Title: What the Package Does (One Line, Title Case)
+Title: Smith College STEM Major Requirements
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    c(person("Rainbow", "Gu", , "rgu@smith.edu", role = c("aut", "cre"),
+      person("Nora", "Zhou", , "nzhou@smith.edu", role = c("aut"),
+      person("Andrea", "Magaña", , "amagana@smith.edu", role = c("aut"),
+           comment = c(ORCID = "YOUR-ORCID-ID")))
+Description: Scrape major requirement from Smith College website for 7 STEM majors. Clean the information to create data frames that help students visualize requirements for each major.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
+Imports:
+  rvest,
+  stringr,
+  dplyr,
+  tidyr
 URL: https://github.com/Rainbow-Gu/smithscrapr
 BugReports: https://github.com/Rainbow-Gu/smithscrapr/issues
 Depends: 

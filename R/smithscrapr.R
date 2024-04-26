@@ -382,3 +382,5 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
 
 chem_list <- get_same_length(chem_list)
 chem_df <- list_to_df(chem_list)
+chem_df <- pivot_df(chem_df, c("Intro (Choice A)", "Intro (Choice B)"))
+

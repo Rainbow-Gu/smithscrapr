@@ -69,7 +69,6 @@ list_to_df <- function(list) {
 sds_df <- list_to_df(sds_list)
 
 # function 3
-
 pivot_df <- function (df, must) {
   pivot_longer(
     df,
@@ -80,42 +79,40 @@ pivot_df <- function (df, must) {
     mutate(Must = ifelse(Requirement %in% must, Class, NA_character_),
            Class = replace(Class, Class == Must, NA_character_)
     ) |>
-    select(Requirement, Must, `Choose` = Class) |>
-    filter(!(is.na(Must) & is.na(`Choose`))) |>
+    select(Requirement, Must, Choose = Class) |>
+    filter(!(is.na(Must) & is.na(Choose))) |>
     group_by(Requirement) |>
     summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-              `Choose` = paste(`Choose`[!is.na(`Choose`)], collapse = ", ")
+              Choose = paste(Choose[!is.na(Choose)], collapse = ", ")
     )
 }
 
 sds_df <- pivot_df(sds_df, c("Core", "Capstone"))
 
 
-#pivot_df <- function (df, must) {
-  #choose <- c("econ_df", "ast_df")
-  #choose_one <- c("sds_df", "cs_df", "biochem_df")
-  #pivot_longer(
-    #df,
-    #cols = everything(),
-    #names_to = "Requirement",
-    #values_to = "Class"
-  #) |>
-    #mutate(Must = ifelse(Requirement %in% must, Class, NA_character_),
-           #Class = replace(Class, Class == Must, NA_character_)
-    #) |>
-    #select(Requirement, Must, `Choose One` = Class) |>
-    #filter(!(is.na(Must) & is.na(`Choose One`))) |>
-    #group_by(Requirement) |>
-    #summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-              #`Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
-    #)
-  #if (df %in% choose) {
-    #colnames[3] <- "Choose"
-  #}
+#   pivot_df <- function (df, must) {
+#   choose <- c("econ_df", "ast_df")
+#   choose_one <- c("sds_df", "cs_df", "biochem_df")
+#   pivot_longer(
+#   df,
+#   cols = everything(),
+#   names_to = "Requirement",
+#   values_to = "Class"
+# ) |>
+# mutate(Must = ifelse(Requirement %in% must, Class, NA_character_),
+# Class = replace(Class, Class == Must, NA_character_)
+# ) |>
+# select(Requirement, Must, `Choose One` = Class) |>
+# filter(!(is.na(Must) & is.na(`Choose One`))) |>
+# group_by(Requirement) |>
+# summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
+# `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
+# )
+# if (df %in% choose) {
+# colnames[3] <- "Choose"
+# }
 
 #}
-
-
 
 
 ## Computer Science

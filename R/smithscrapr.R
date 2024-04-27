@@ -3,6 +3,32 @@ library(stringr)
 library(dplyr)
 library(tidyr)
 
+# function
+req_df <- function (list, must) {
+  max_length <- max(sapply(list, length))
+  for (i in seq_along(list)) {
+    length(list[[i]]) <- max_length}
+  df <- data.frame(list, check.names = FALSE)
+
+  pivot_longer(
+    df,
+    cols = everything(),
+    names_to = "Requirement",
+    values_to = "Class"
+  ) |>
+    mutate(Must = ifelse(Requirement %in% must, Class, NA_character_),
+           Class = replace(Class, Class == Must, NA_character_)
+    ) |>
+    select(Requirement, Must, Choose = Class) |>
+    filter(!(is.na(Must) & is.na(Choose))) |>
+    group_by(Requirement) |>
+    summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
+              Choose = paste(Choose[!is.na(Choose)], collapse = ", ")
+    )
+}
+
+## sds
+
 sds <- read_html("https://www.smith.edu/academics/statistical-data-sciences#statistical-and-data-sciences-major")
 
 sds_core <- sds |>
@@ -49,70 +75,8 @@ sds_list <- list(Core = sds_core,
                  Application = sds_application,
                  Capstone = sds_capstone)
 
-# function 1
-get_same_length <- function(list) {
-  max_length <- max(sapply(list, length))
-  for (i in seq_along(list)) {
-    length(list[[i]]) <- max_length
-  }
-  return(list)
-}
 
-sds_list <- get_same_length(sds_list)
-
-# function 2
-list_to_df <- function(list) {
-  df <- data.frame(list, check.names = FALSE)
-  return(df)
-}
-
-sds_df <- list_to_df(sds_list)
-
-# function 3
-pivot_df <- function (df, must) {
-  pivot_longer(
-    df,
-    cols = everything(),
-    names_to = "Requirement",
-    values_to = "Class"
-  ) |>
-    mutate(Must = ifelse(Requirement %in% must, Class, NA_character_),
-           Class = replace(Class, Class == Must, NA_character_)
-    ) |>
-    select(Requirement, Must, Choose = Class) |>
-    filter(!(is.na(Must) & is.na(Choose))) |>
-    group_by(Requirement) |>
-    summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-              Choose = paste(Choose[!is.na(Choose)], collapse = ", ")
-    )
-}
-
-sds_df <- pivot_df(sds_df, c("Core", "Capstone"))
-
-
-#   pivot_df <- function (df, must) {
-#   choose <- c("econ_df", "ast_df")
-#   choose_one <- c("sds_df", "cs_df", "biochem_df")
-#   pivot_longer(
-#   df,
-#   cols = everything(),
-#   names_to = "Requirement",
-#   values_to = "Class"
-# ) |>
-# mutate(Must = ifelse(Requirement %in% must, Class, NA_character_),
-# Class = replace(Class, Class == Must, NA_character_)
-# ) |>
-# select(Requirement, Must, `Choose One` = Class) |>
-# filter(!(is.na(Must) & is.na(`Choose One`))) |>
-# group_by(Requirement) |>
-# summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-# `Choose One` = paste(`Choose One`[!is.na(`Choose One`)], collapse = ", ")
-# )
-# if (df %in% choose) {
-# colnames[3] <- "Choose"
-# }
-
-#}
+sds_df <- req_df(sds_list, c("Core", "Capstone"))
 
 
 ## Computer Science
@@ -175,11 +139,7 @@ cs_list <- list(Introduction = cs_intro,
                 Level_300 = cs_300
 )
 
-cs_list <- get_same_length(cs_list)
-
-cs_df <- list_to_df(cs_list)
-
-cs_df <- pivot_df(cs_df, c("Introduction", "Core", "Mathematics"))
+cs_df <- req_df(cs_list, c("Introduction", "Core", "Mathematics"))
 
 
 ## For computer science I used a lot of the same code, so hopper is right about there being repetative code
@@ -211,12 +171,7 @@ econ_list <- list(Core = econ_core,
                   Seminar = econ_seminar
 )
 
-
-econ_list <- get_same_length(econ_list)
-
-econ_df <- list_to_df(econ_list)
-
-econ_df <- pivot_df(econ_df, "Core")
+econ_df <- req_df(econ_list, "Core")
 
 
 # astronomy
@@ -251,11 +206,7 @@ ast_list <- list(Core = ast_core,
                  "300" = ast_300,
                  "200/300" = ast_200_or_300)
 
-ast_list <- get_same_length(ast_list)
-
-ast_df <- list_to_df(ast_list)
-
-ast_df <- pivot_df(ast_df, "Core")
+ast_df <- req_df(ast_list, "Core")
 
 # biochem
 biochem <- read_html("https://www.smith.edu/academics/biochemistry#biochemistry-major")
@@ -317,10 +268,7 @@ biochem_list <- list("Foundation Bio" = biochem_fdn_bio,
                      Elective = biochem_elective
 )
 
-
-biochem_list <- get_same_length(biochem_list)
-biochem_df <- list_to_df(biochem_list)
-biochem_df <- pivot_df(biochem_df, c("Foundation Bio", "Foundation General Chem",
+biochem_df <- req_df(biochem_list, c("Foundation Bio", "Foundation General Chem",
                                      "Foundation Organic Chem", "Foundation Biochem",
                                      "Upper-level Biochem"))
 
@@ -377,7 +325,5 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
                   "Advanced Lab (choose 2)" = chem_adv_lab,
                   "Electives (2-3 to reach 10)" = chem_electives)
 
-chem_list <- get_same_length(chem_list)
-chem_df <- list_to_df(chem_list)
-chem_df <- pivot_df(chem_df, c("Intro (Choice A)", "Intro (Choice B)"))
+chem_df <- req_df(chem_list, c("Intro (Choice A)", "Intro (Choice B)"))
 

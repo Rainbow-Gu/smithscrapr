@@ -49,28 +49,15 @@ sds_list <- list(Core = sds_core,
                  Application = sds_application,
                  Capstone = sds_capstone)
 
-# function 1
-get_same_length <- function(list) {
+
+# function
+req_df <- function (list, must) {
   max_length <- max(sapply(list, length))
   for (i in seq_along(list)) {
-    length(list[[i]]) <- max_length
-  }
-  return(list)
-}
-
-sds_list <- get_same_length(sds_list)
-
-# function 2
-list_to_df <- function(list) {
+    length(list[[i]]) <- max_length}
   df <- data.frame(list, check.names = FALSE)
-  return(df)
-}
 
-sds_df <- list_to_df(sds_list)
-
-# function 3
-pivot_df <- function (df, must) {
-  pivot_longer(
+   pivot_longer(
     df,
     cols = everything(),
     names_to = "Requirement",
@@ -87,7 +74,7 @@ pivot_df <- function (df, must) {
     )
 }
 
-sds_df <- pivot_df(sds_df, c("Core", "Capstone"))
+sds_df <- req_df(sds_list, c("Core", "Capstone"))
 
 
 usethis::use_data(sds_df, overwrite = TRUE)

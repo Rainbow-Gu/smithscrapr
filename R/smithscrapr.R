@@ -23,7 +23,11 @@
 #'
 
 # function
-req_df <- function (list, must) {
+req_df <- function (major, must) {
+  if (major %in% c("sds")) {
+    list <- sds()
+  }
+
   max_length <- max(sapply(list, length))
   for (i in seq_along(list)) {
     length(list[[i]]) <- max_length}
@@ -46,8 +50,11 @@ req_df <- function (list, must) {
     )
 }
 
+req_df("sds", c("Core", "Capstone"))
+
 ## sds
 
+sds <- function () {
 sds <- read_html("https://www.smith.edu/academics/statistical-data-sciences#statistical-and-data-sciences-major")
 
 sds_core <- sds |>
@@ -93,7 +100,7 @@ sds_list <- list(Core = sds_core,
                  Communication = sds_communication,
                  Application = sds_application,
                  Capstone = sds_capstone)
-
+}
 
 # sds_df <- req_df(sds_list, c("Core", "Capstone"))
 

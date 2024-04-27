@@ -1,7 +1,26 @@
-library(rvest)
-library(stringr)
-library(dplyr)
-library(tidyr)
+#' @title Make tables for major requirements
+#'
+#' @description
+#' Given a list of web-scraped major requirements, turn it into a cleaned data frame
+#'
+#' @importFrom rvest html_elements html_text2 read_html
+#' @importFrom stringr str_remove str_split str_extract
+#' @importFrom dplyr mutate select filter group_by summarise
+#' @importFrom tidyr pivot_longer
+#'
+#' @param list A list of major requirements from web scrapping
+#' @param must A character vector with all required courses that one must take
+#'
+#' @return A data frame that categorizes courses for major requirements under must or choose to take columns
+#'
+#' Note that for each row, courses appears in one column
+#'
+#' @examples
+#' sds_df <- req_df(sds_list, c("Core", "Capstone"))
+#' print(sds_df)
+#'
+#' @export
+#'
 
 # function
 req_df <- function (list, must) {
@@ -76,7 +95,7 @@ sds_list <- list(Core = sds_core,
                  Capstone = sds_capstone)
 
 
-sds_df <- req_df(sds_list, c("Core", "Capstone"))
+# sds_df <- req_df(sds_list, c("Core", "Capstone"))
 
 
 ## Computer Science
@@ -139,7 +158,7 @@ cs_list <- list(Introduction = cs_intro,
                 Level_300 = cs_300
 )
 
-cs_df <- req_df(cs_list, c("Introduction", "Core", "Mathematics"))
+# cs_df <- req_df(cs_list, c("Introduction", "Core", "Mathematics"))
 
 
 ## For computer science I used a lot of the same code, so hopper is right about there being repetative code
@@ -171,7 +190,7 @@ econ_list <- list(Core = econ_core,
                   Seminar = econ_seminar
 )
 
-econ_df <- req_df(econ_list, "Core")
+# econ_df <- req_df(econ_list, "Core")
 
 
 # astronomy
@@ -206,7 +225,7 @@ ast_list <- list(Core = ast_core,
                  "300" = ast_300,
                  "200/300" = ast_200_or_300)
 
-ast_df <- req_df(ast_list, "Core")
+# ast_df <- req_df(ast_list, "Core")
 
 # biochem
 biochem <- read_html("https://www.smith.edu/academics/biochemistry#biochemistry-major")
@@ -268,9 +287,9 @@ biochem_list <- list("Foundation Bio" = biochem_fdn_bio,
                      Elective = biochem_elective
 )
 
-biochem_df <- req_df(biochem_list, c("Foundation Bio", "Foundation General Chem",
-                                     "Foundation Organic Chem", "Foundation Biochem",
-                                     "Upper-level Biochem"))
+# biochem_df <- req_df(biochem_list, c("Foundation Bio", "Foundation General Chem",
+#                                     "Foundation Organic Chem", "Foundation Biochem",
+#                                    "Upper-level Biochem"))
 
 # Chemistry major with no pivot table
 
@@ -325,5 +344,5 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
                   "Advanced Lab (choose 2)" = chem_adv_lab,
                   "Electives (2-3 to reach 10)" = chem_electives)
 
-chem_df <- req_df(chem_list, c("Intro (Choice A)", "Intro (Choice B)"))
+# chem_df <- req_df(chem_list, c("Intro (Choice A)", "Intro (Choice B)"))
 

@@ -353,3 +353,220 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
 
 # chem_df <- req_df(chem_list, c("Intro (Choice A)", "Intro (Choice B)"))
 
+## Biology
+
+bio_track_matcher <- function (track) {
+  bio <- read_html("https://www.smith.edu/academics/biological-sciences")
+  if (track == 1 |track == 2 | track == 3 | track == 4 | track == 5) {
+
+    # must take
+    bio_core <- bio |>
+      html_elements("li:nth-child(1) li~ li+ li , ol:nth-child(6) ol:nth-child(1) .code_bubble") |>
+      html_text2()
+
+    bio_core <- bio_core[7:9]
+
+    bio_core[3] <- str_remove(bio_core[3], pattern = "[:punct:]")
+
+    # choose 1
+    bio_chem_req <- bio |>
+      html_elements("ol:nth-child(6) > li:nth-child(2) .code_bubble") |>
+      html_text2()
+    bio_sds_req <- bio |>
+      html_elements("ol:nth-child(24) li~ li+ li > .sc_courseinline .code_bubble") |>
+      html_text2()
+
+    if (track!= 5) {
+
+      # choose 2
+      bio_elective <- bio |>
+        html_elements("ol:nth-child(6) li:nth-child(5)") |>
+        html_text2()
+
+      # must
+      bio_lab <- bio |>
+        html_elements("ol:nth-child(3) span") |>
+        html_text2() |>
+        unique()
+      bio_lab_base <- bio_lab[1:2] # use this for table
+
+      if (track == 1) {
+        # NA
+        bio_upper <- bio |> # row name must include "one course from each of Tracks 2-4"
+          html_elements("ol:nth-child(2) span") |>
+          html_text2()
+
+        # choose 2
+        bio_upper_300 <- c(str_remove(bio_upper[1], pattern = "^[A-Za-z]{3} "), "from tracks 2-4")
+        bio_upper_300 <- paste(bio_upper_300, collapse = " ")
+        # choose 3
+        bio_upper_200 <- c(str_remove(bio_upper[2], pattern = "^[A-Za-z]{3} "), "from tracks 2-4")
+        bio_upper_200 <- paste(bio_upper_200, collapse = " ")
+        # choose 1
+        bio_lab_300 <- c(str_remove(bio_lab[3], pattern = "^[A-Za-z]{3} "), "from tracks 2-4")
+        bio_lab_300 <- paste(bio_lab_300, collapse = " ")
+        # choose 2
+        bio_lab_200 <- c(str_remove(bio_lab[4], pattern = "^[A-Za-z]{3} "), "from tracks 2-4")
+        bio_lab_200 <- paste(bio_lab_200, collapse = " ")
+      }
+
+      if (track == 2) {
+        # choose 2
+        bio_upper_300 <- bio |>
+          html_elements(".sc_courseinline:nth-child(24) .code_bubble , .sc_courseinline+ span .sc_courseinline .code_bubble , .sc_courseinline+ span:nth-child(23) , .sc_courseinline:nth-child(22) .code_bubble , .sc_courseinline:nth-child(20) .code_bubble , .sc_courseinline:nth-child(18) .code_bubble , .sc_courseinline:nth-child(16) .code_bubble , .sc_courseinline:nth-child(14) .code_bubble") |>
+          html_text2()
+
+        bio_upper_300 <- c(bio_upper_300[1:5], strsplit(bio_upper_300[6], ", ")[[1]], bio_upper_300[7:8])
+        bio_upper_300 <- bio_upper_300[-6]
+
+        # choose 3
+        bio_upper_200 <- bio |>
+          html_elements("p+ p > .sc_courseinline+ .sc_courseinline:nth-child(2) .code_bubble , p:nth-child(11) .sc_courseinline:nth-child(4) .code_bubble , p:nth-child(11) .sc_courseinline:nth-child(6) .code_bubble , p:nth-child(11) .sc_courseinline:nth-child(8) .code_bubble , p > .sc_courseinline:nth-child(10) .code_bubble , p > .sc_courseinline:nth-child(12) .code_bubble , p:nth-child(11) > .sc_courseinline:nth-child(1) .code_bubble") |>
+          html_text2()
+
+        bio_upper_200 <- c(bio_upper_200, bio_upper_300)
+
+        # choose 1
+        bio_lab_300 <- bio |>
+          html_elements("#docs-internal-guid-5bdd37a7-7fff-3e74-b1f3-d28628ab7848 .sc_courseinline:nth-child(8) .code_bubble , #docs-internal-guid-5bdd37a7-7fff-3e74-b1f3-d28628ab7848 .sc_courseinline:nth-child(7) .code_bubble , #docs-internal-guid-5bdd37a7-7fff-3e74-b1f3-d28628ab7848 .sc_courseinline:nth-child(6) .code_bubble") |>
+          html_text2()
+
+        # choose 2
+        bio_lab_200 <- bio |>
+          html_elements("#docs-internal-guid-5bdd37a7-7fff-3e74-b1f3-d28628ab7848 .sc_courseinline:nth-child(5) .code_bubble , #docs-internal-guid-5bdd37a7-7fff-3e74-b1f3-d28628ab7848 .sc_courseinline:nth-child(4) .code_bubble , #docs-internal-guid-5bdd37a7-7fff-3e74-b1f3-d28628ab7848 .sc_courseinline:nth-child(3) .code_bubble , #docs-internal-guid-5bdd37a7-7fff-3e74-b1f3-d28628ab7848 .sc_courseinline:nth-child(2) .code_bubble , #docs-internal-guid-5bdd37a7-7fff-3e74-b1f3-d28628ab7848 .sc_courseinline:nth-child(1) .code_bubble") |>
+          html_text2()
+
+        bio_lab_200 <- c(bio_lab_200, bio_lab_300)
+      }
+
+      if (track == 3) {
+        # choose 2
+        bio_upper_300 <- bio |>
+          html_elements("p:nth-child(15) span:nth-child(26) , p:nth-child(15) span:nth-child(22) , p:nth-child(15) .sc_courseinline:nth-child(25) .code_bubble , p:nth-child(15) .sc_courseinline:nth-child(23) .code_bubble , p:nth-child(15) .sc_courseinline:nth-child(21) .code_bubble , p:nth-child(15) .sc_courseinline:nth-child(19) .code_bubble , p:nth-child(15) .sc_courseinline:nth-child(17) .code_bubble , p:nth-child(15) span:nth-child(16) , p:nth-child(15) .sc_courseinline:nth-child(15) .code_bubble , p:nth-child(15) .sc_courseinline:nth-child(13) .code_bubble , p:nth-child(15) .sc_courseinline:nth-child(11) .code_bubble") |>
+          html_text2()
+
+        bio_upper_300 <- c(bio_upper_300[1:3],
+                           str_remove(bio_upper_300[4], pattern = ", "),
+                           bio_upper_300[5:7],
+                           strsplit(bio_upper_300[8], ", ")[[1]],
+                           bio_upper_300[9:10],
+                           str_match(bio_upper_300[11], pattern = "a .*[0-9]")
+        )
+        bio_upper_300 <- bio_upper_300[-8]
+
+        # choose 3
+        bio_upper_200 <- bio |>
+          html_elements("p:nth-child(15) .sc_courseinline:nth-child(9) .code_bubble , p:nth-child(15) .sc_courseinline:nth-child(7) .code_bubble , p:nth-child(15) .sc_courseinline:nth-child(5) .code_bubble , p:nth-child(15) .sc_courseinline:nth-child(3) .code_bubble , p:nth-child(15) .sc_courseinline:nth-child(1) .code_bubble") |>
+          html_text2()
+
+        bio_upper_200 <- c(bio_upper_200, bio_upper_300)
+
+        # choose 1
+        bio_lab_300 <- bio |>
+          html_elements("p+ p > .sc_courseinline~ .sc_courseinline+ .sc_courseinline .code_bubble") |>
+          html_text2()
+
+        # choose 2
+        bio_lab_200 <- bio |>
+          html_elements("#docs-internal-guid-5bdd37a7-7fff-3e74-b1f3-d28628ab7848 .code_bubble") |>
+          html_text2()
+      }
+
+      if (track == 4) {
+        # choose 2
+        bio_upper_300 <- bio |>
+          html_elements(".sc_courseinline:nth-child(27) .code_bubble , p:nth-child(20) span:nth-child(26) , p:nth-child(20) .sc_courseinline:nth-child(25) .code_bubble , p:nth-child(20) .sc_courseinline:nth-child(23) .code_bubble , p:nth-child(20) .sc_courseinline:nth-child(21) .code_bubble , p:nth-child(20) .sc_courseinline:nth-child(19) .code_bubble") |>
+          html_text2()
+
+        bio_upper_300 <- c(bio_upper_300[1:4],
+                           str_match(bio_upper_300[5], pattern = "a.+[0-9]"),
+                           bio_upper_300[6])
+
+        # choose 3
+        bio_upper_200 <- bio |>
+          html_elements("p:nth-child(20) span") |>
+          html_text2() |>
+          unique()
+
+        bio_upper_200 <- c(bio_upper_200[1],
+                           bio_upper_200[3:14],
+                           str_match(bio_upper_200[15], pattern = "a.+[0-9]"),
+                           bio_upper_200[16])
+
+        # choose 1
+        bio_lab_300 <- bio |>
+          html_elements("span .sc_courseinline:nth-child(13) .code_bubble , span .sc_courseinline:nth-child(12) .code_bubble , span .sc_courseinline:nth-child(11) .code_bubble , span .sc_courseinline:nth-child(10) .code_bubble , span .sc_courseinline:nth-child(9) .code_bubble , span+ span .sc_courseinline:nth-child(8) .code_bubble") |>
+          html_text2()
+
+        # choose 2
+        bio_lab_200 <- bio |>
+          html_elements("#docs-internal-guid-f072ab10-7fff-49f5-1466-9b0c21f6f0eb .code_bubble") |>
+          html_text2()
+
+      }
+
+      # function for track 1-4
+      bio_t_df <- data.frame(
+        Requirements = c("core", "chem", "sds", "upper-level", "electives", "labs"),
+        Must = I(list(bio_core, NA, NA, NA, NA, bio_lab_base)),
+        `Choose 1` = I(list(NA, bio_chem_req, bio_sds_req, NA, NA, bio_lab_300)),
+        `Choose 2` = I(list(NA, NA, NA, bio_upper_300, bio_elective, bio_lab_200)),
+        `Choose 3` = I(list(NA, NA, NA, bio_upper_200, NA, NA))
+      )
+
+      if (track == 1) {
+        # do the row name
+        rownames(bio_t_df)[4] <- "(one course from each of Tracks 2-4)"
+        return(bio_t_df)
+      } else {
+        return(bio_t_df)
+      }
+
+    }
+
+    if (track == 5) {
+
+      bio_t5_courses_must <- bio |>
+        html_elements("li:nth-child(4) ol:nth-child(1) li:nth-child(1)") |>
+        html_text2()
+
+      bio_t5_courses_choose <- bio |>
+        html_elements("li:nth-child(4) ol:nth-child(1) li+ li") |>
+        html_text2()
+
+      bio_t5_lab_must <- bio |>
+        html_elements("li+ li ol:nth-child(1) .code_bubble") |>
+        html_text2()
+
+      bio_t5_lab_choose <-bio |>
+        html_elements("li:nth-child(5) li+ li") |>
+        html_text2() |>
+        unique()
+      bio_t5_lab_choose <- bio_t5_lab_choose[4:5]
+
+      bio_edu_must <- bio |>
+        html_elements("li span .sc_courseinline:nth-child(5) .code_bubble , li span .sc_courseinline:nth-child(4) .code_bubble , li span .sc_courseinline:nth-child(1) .code_bubble") |>
+        html_text2()
+      bio_edu_choose <- bio |>
+        html_elements("li span .sc_courseinline:nth-child(3) .code_bubble , li span .sc_courseinline:nth-child(2) .code_bubble") |>
+        html_text2()
+
+      bio_nonbio <- bio |>
+        html_elements("ol+ p .code_bubble") |>
+        html_text2()
+
+      # function for track 5
+      bio_t5_df <- data.frame(
+        Requirements = c("core", "chem", "sds", "course", "lab", "education", "Outside of major requirement (for license)"),
+        Must = I(list(bio_core, NA, NA, bio_t5_courses_must, bio_t5_lab_must, bio_edu_must, bio_nonbio)),
+        `Choose 1` = I(list(NA, bio_chem_req, bio_sds_req, bio_t5_courses_choose, bio_t5_lab_choose, bio_edu_choose, NA))
+      )
+      return(bio_t5_df)
+    }
+  }
+  else {
+    stop("Input Argument must be between 1-5")
+  }
+}
+
+# bio_track_matcher(5)

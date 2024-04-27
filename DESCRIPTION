@@ -2,10 +2,9 @@ Package: smithscrapr
 Title: Smith College STEM Major Requirements
 Version: 0.0.0.9000
 Authors@R: 
-    c(person("Rainbow", "Gu", , "rgu@smith.edu", role = c("aut", "cre"),
-      person("Nora", "Zhou", , "nzhou@smith.edu", role = c("aut"),
-      person("Andrea", "Magaña", , "amagana@smith.edu", role = c("aut"),
-           comment = c(ORCID = "YOUR-ORCID-ID")))
+    c(person("Rainbow", "Gu", , "rgu@smith.edu", role = c("aut", "cre")),
+      person("Nora", "Zhou", , "nzhou@smith.edu", role = "aut"),
+      person("Andrea", "Magana", , "amagana@smith.edu", role = "aut"))
 Description: Scrape major requirement from Smith College website for 7 STEM majors. Clean the information to create data frames that help students visualize requirements for each major.
 License: MIT + file LICENSE
 Encoding: UTF-8

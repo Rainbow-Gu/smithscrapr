@@ -4,12 +4,12 @@
 \alias{req_df}
 \title{Make tables for major requirements}
 \usage{
-req_df(list, must)
+req_df(major, must)
 }
 \arguments{
-\item{list}{A list of major requirements from web scrapping}
-
 \item{must}{A character vector with all required courses that one must take}
+
+\item{list}{A list of major requirements from web scrapping}
 }
 \value{
 A data frame that categorizes courses for major requirements under must or choose to take columns

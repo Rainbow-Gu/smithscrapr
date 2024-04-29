@@ -3,8 +3,6 @@
 #' @description
 #' Given a list of web-scraped major requirements, turn it into a cleaned data frame
 #'
-#' @importFrom rvest html_elements html_text2 read_html
-#' @importFrom stringr str_remove str_split str_extract
 #' @importFrom dplyr mutate select filter group_by summarise
 #' @importFrom tidyr pivot_longer
 #'
@@ -24,8 +22,11 @@
 
 # function
 req_df <- function (major, must) {
+
   if (major %in% c("sds")) {
     list <- sds()
+  } else if (major %in% "chem") {
+    list <- chem()
   }
 
   max_length <- max(sapply(list, length))
@@ -45,14 +46,13 @@ req_df <- function (major, must) {
     select(Requirement, Must, Choose = Class) |>
     filter(!(is.na(Must) & is.na(Choose))) |>
     group_by(Requirement) |>
-    summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
+    summarise(Must = paste(Must[!is.na(Must)], collapse = ", "),
               Choose = paste(Choose[!is.na(Choose)], collapse = ", ")
     )
 }
 
-req_df("sds", c("Core", "Capstone"))
-
-## sds
+#' @importFrom rvest html_elements html_text2 read_html
+#' @importFrom stringr str_remove str_split str_extract
 
 sds <- function () {
 sds <- read_html("https://www.smith.edu/academics/statistical-data-sciences#statistical-and-data-sciences-major")
@@ -102,10 +102,10 @@ sds_list <- list(Core = sds_core,
                  Capstone = sds_capstone)
 }
 
-# sds_df <- req_df(sds_list, c("Core", "Capstone"))
+#' @importFrom rvest html_elements html_text2 read_html
+#' @importFrom stringr str_remove str_split str_extract
 
-
-## Computer Science
+csc <- function () {
 cs <- read_html("https://www.smith.edu/academics/computer-science#computer-science-courses")
 cs_intro <- cs |>
   html_elements("#computer-science-major li:nth-child(1) li") |>
@@ -163,15 +163,12 @@ cs_list <- list(Introduction = cs_intro,
                 System = cs_system,
                 Level_200 = cs_200,
                 Level_300 = cs_300
-)
+) }
 
-# cs_df <- req_df(cs_list, c("Introduction", "Core", "Mathematics"))
+#' @importFrom rvest html_elements html_text2 read_html
+#' @importFrom stringr str_remove str_split str_extract
 
-
-## For computer science I used a lot of the same code, so hopper is right about there being repetative code
-
-## For quantative economics
-
+eco <- function () {
 econ <- read_html("https://www.smith.edu/academics/economics#advisers-1")
 econ_core <- econ |>
   html_elements("p+ ol > li > ol > li:nth-child(4) , ol:nth-child(10) ol ol li+ li , ol:nth-child(10) ol .code_bubble") |>
@@ -195,12 +192,13 @@ econ_list <- list(Core = econ_core,
                   Upper_level = econ_upper,
                   Electives = econ_electives,
                   Seminar = econ_seminar
-)
-
-# econ_df <- req_df(econ_list, "Core")
+) }
 
 
-# astronomy
+#' @importFrom rvest html_elements html_text2 read_html
+#' @importFrom stringr str_remove str_split str_extract
+
+ast <- function () {
 ast <- read_html("https://www.smith.edu/academics/astronomy")
 
 ast_core <- ast |>
@@ -231,10 +229,12 @@ ast_list <- list(Core = ast_core,
                  "200" = ast_200,
                  "300" = ast_300,
                  "200/300" = ast_200_or_300)
+}
 
-# ast_df <- req_df(ast_list, "Core")
+#' @importFrom rvest html_elements html_text2 read_html
+#' @importFrom stringr str_remove str_split str_extract
 
-# biochem
+bch <- function () {
 biochem <- read_html("https://www.smith.edu/academics/biochemistry#biochemistry-major")
 
 biochem_fdn_bio <- biochem |>
@@ -292,15 +292,12 @@ biochem_list <- list("Foundation Bio" = biochem_fdn_bio,
                      Physiology = biochem_physiology,
                      "Upper-level Biochem" = biochem_upper_biochem,
                      Elective = biochem_elective
-)
+)}
 
-# biochem_df <- req_df(biochem_list, c("Foundation Bio", "Foundation General Chem",
-#                                     "Foundation Organic Chem", "Foundation Biochem",
-#                                    "Upper-level Biochem"))
+#' @importFrom rvest html_elements html_text2 read_html
+#' @importFrom stringr str_remove str_split str_extract
 
-# Chemistry major with no pivot table
-
-
+chm <- function () {
 chem <- read_html("https://www.smith.edu/academics/chemistry#chemistry-major")
 
 chem_intro_1a <- chem |>
@@ -350,10 +347,30 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
                   "Courses (choose 3)" = chem_intermediate,
                   "Advanced Lab (choose 2)" = chem_adv_lab,
                   "Electives (2-3 to reach 10)" = chem_electives)
+}
 
-# chem_df <- req_df(chem_list, c("Intro (Choice A)", "Intro (Choice B)"))
-
-## Biology
+#' @title Make tables for Biology's major requirements
+#'
+#' @description
+#' Given a list of web-scraped major requirements for each five of Biology's tracks, turn it into a cleaned data frame
+#'
+#' @importFrom rvest html_elements html_text2 read_html
+#' @importFrom stringr str_remove str_split str_extract
+#' @importFrom dplyr mutate select filter group_by summarise
+#' @importFrom tidyr pivot_longer
+#'
+#' @param track A numeric value 1-5 that represent which track of biology the user is looking for
+#'
+#' @return A data frame that categorizes courses for major requirements under must or choose to take columns
+#'
+#' Note that for each row, courses appears in one column
+#'
+#' @examples
+#' track_1 <- bio_track_matcher()
+#' print(track_1)
+#'
+#' @export
+#'
 
 bio_track_matcher <- function (track) {
   bio <- read_html("https://www.smith.edu/academics/biological-sciences")

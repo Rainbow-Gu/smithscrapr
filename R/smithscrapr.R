@@ -20,13 +20,26 @@
 #' @export
 #'
 
-# function
-req_df <- function (major, must) {
-
-  if (major %in% c("sds")) {
+req_df <- function (major) {
+  if (major %in% "sds") {
     list <- sds()
-  } else if (major %in% "chem") {
-    list <- chem()
+    must <- c("Core", "Capstone")
+  } else if (major %in% "chm") {
+    list <- chm()
+    must <- c("Intro (Choice A)", "Intro (Choice B)")
+  } else if (major %in% "bch") {
+    list <- bch()
+    must <- c("Foundation Bio", "Foundation General Chem",
+              "Foundation Organic Chem", "Foundation Biochem", "Upper-level Biochem")
+  } else if (major %in% "ast") {
+    list <- ast()
+    must <- c("Core")
+  } else if (major %in% "csc") {
+    list <- csc()
+    must <- c("Introduction", "Core", "Mathematics")
+  } else if (major %in% "eco") {
+    list <- eco()
+    must <- c("Core")
   }
 
   max_length <- max(sapply(list, length))
@@ -366,7 +379,7 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
 #' Note that for each row, courses appears in one column
 #'
 #' @examples
-#' track_1 <- bio_track_matcher()
+#' track_1 <- bio_track_matcher(1)
 #' print(track_1)
 #'
 #' @export
@@ -585,5 +598,3 @@ bio_track_matcher <- function (track) {
     stop("Input Argument must be between 1-5")
   }
 }
-
-# bio_track_matcher(5)

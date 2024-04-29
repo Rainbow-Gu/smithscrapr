@@ -1,0 +1,43 @@
+---
+title: "vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Visualizing Smith STEM major requirements
+The main function of the `smithscrapr` is to scrape some STEM major requirements from Smith College Website and turn them into data frames categorized by options. In other words, courses students have to take or choose to take to fulfill the major requirement. 
+
+```{r setup}
+library(smithscrapr)
+```
+
+Then, use the `req_df()` function to get data frames for each of the six majors, including Statistical and Data Sciences, Computer Sciences, Economics, Biochemistry, Astronomy, and Chemistry. The `major` argument should be "sds", "csc", "eco", "bch", "ast", or "chm". We input "sds" because we are retrieving the data frame for SDS major requirements. 
+
+```{r}
+sds <- req_df("sds")
+```
+
+The biology major is a special case because the requirements are different for each track. Use `bio_track_matcher()` to specify the track. We'll retrieve a data frame from track one, so we'll set the `track` argument to 1.
+
+```{r}
+track_one <- bio_track_matcher(1)
+```
+
+## SDS Data
+
+The `smithscrapr` package also comes with a built-in data set describing the major requirements for SDS.
+
+```{r}
+smithscrapr::sds_df
+```
+

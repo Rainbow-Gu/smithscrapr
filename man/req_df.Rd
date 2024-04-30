@@ -20,7 +20,7 @@ Note that for each row, courses appears in one column
 Given a list of web-scraped major requirements, turn it into a cleaned data frame
 }
 \examples{
-sds_df <- req_df(sds_list, c("Core", "Capstone"))
-print(sds_df)
+sds_df <- req_df("sds")
+sds_df
 
 }

@@ -19,6 +19,6 @@ Given a list of web-scraped major requirements for each five of Biology's tracks
 }
 \examples{
 track_1 <- bio_track_matcher(1)
-print(track_1)
+track_1
 
 }

@@ -7,12 +7,12 @@
 req_df(major)
 }
 \arguments{
-\item{list}{A list of major requirements from web scrapping}
-
-\item{must}{A character vector with all required courses that one must take}
+\item{character}{A character vector of a major's abbreviation from below: "sds", "csc", "eco",
+"bch", "ast", or "chm"}
 }
 \value{
-A data frame that categorizes courses for major requirements under must or choose to take columns
+A data frame that categorizes courses for major requirements under must or choose to
+take columns
 
 Note that for each row, courses appears in one column
 }

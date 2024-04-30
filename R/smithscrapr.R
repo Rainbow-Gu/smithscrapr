@@ -6,10 +6,11 @@
 #' @importFrom dplyr mutate select filter group_by summarise
 #' @importFrom tidyr pivot_longer
 #'
-#' @param list A list of major requirements from web scrapping
-#' @param must A character vector with all required courses that one must take
+#' @param character A character vector of a major's abbreviation from below: "sds", "csc", "eco",
+#' "bch", "ast", or "chm"
 #'
-#' @return A data frame that categorizes courses for major requirements under must or choose to take columns
+#' @return A data frame that categorizes courses for major requirements under must or choose to
+#' take columns
 #'
 #' Note that for each row, courses appears in one column
 #'
@@ -372,7 +373,7 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
 #' @importFrom dplyr mutate select filter group_by summarise
 #' @importFrom tidyr pivot_longer
 #'
-#' @param track A numeric value 1-5 that represent which track of biology the user is looking for
+#' @param number A numeric value 1-5 that represent which track of biology the user is looking for
 #'
 #' @return A data frame that categorizes courses for major requirements under must or choose to take columns
 #'

@@ -7,7 +7,7 @@
 bio_track_matcher(track)
 }
 \arguments{
-\item{track}{A numeric value 1-5 that represent which track of biology the user is looking for}
+\item{number}{A numeric value 1-5 that represent which track of biology the user is looking for}
 }
 \value{
 A data frame that categorizes courses for major requirements under must or choose to take columns

@@ -368,7 +368,7 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
 #' Given a list of web-scraped major requirements for each five of Biology's tracks, turn it into a cleaned data frame
 #'
 #' @importFrom rvest html_elements html_text2 read_html
-#' @importFrom stringr str_remove str_split str_extract
+#' @importFrom stringr str_remove str_split str_extract str_match
 #' @importFrom dplyr mutate select filter group_by summarise
 #' @importFrom tidyr pivot_longer
 #'

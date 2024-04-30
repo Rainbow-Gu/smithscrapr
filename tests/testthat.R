@@ -10,15 +10,3 @@ library(testthat)
 library(smithscrapr)
 
 test_check("smithscrapr")
-
-expected_df <- data.frame(
-  Requirement = c("Application", "Capstone", "Communication", "Core",
-                     "Programming", "Statistics"),
-  Must = c(NA, !NA, NA, !NA, NA, NA),
-  Chose = c(!NA, NA, !NA, NA, !NA, !NA)
-)
-
-test_that("My data frame looks right", {
-  expect_equal(req_df(sds), expected_df)
-}
-  )

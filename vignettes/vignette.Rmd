@@ -25,12 +25,16 @@ Then, use the `req_df()` function to get data frames for each of the six majors,
 
 ```{r}
 sds <- req_df("sds")
+sds
 ```
+
+As you can see, to fulfill the SDS major, students must take every class for Capstone and Core, but they have the choice to choose one of the classes for the rest of the requirements, including Application, Communication, Programming, and Statistics.
 
 The biology major is a special case because the requirements are different for each track. Use `bio_track_matcher()` to specify the track. We'll retrieve a data frame from track one, so we'll set the `track` argument to 1.
 
 ```{r}
 track_one <- bio_track_matcher(1)
+track_one
 ```
 
 ## SDS Data

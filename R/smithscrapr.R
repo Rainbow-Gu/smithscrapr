@@ -41,6 +41,8 @@ req_df <- function (major) {
   } else if (major %in% "eco") {
     list <- eco()
     must <- c("Core")
+  } else {
+    stop("Input argument doesn't exist, check the help page for available majors")
   }
 
   max_length <- max(sapply(list, length))

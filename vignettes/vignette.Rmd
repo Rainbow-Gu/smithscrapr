@@ -37,6 +37,8 @@ track_one <- bio_track_matcher(1)
 track_one
 ```
 
+From above the students must take all the core courses in the list, choose one out of the two courses for fulfilling the chemistry and stats requirement, choose 3 200 or 300 level and 2 300 level courses to fulfil the upper level courses requirement, choose 2 electives, and take the lab courses under must and choose 2 200 or 300 level and 1 300 level courses to fullfil the lab requirement. 
+
 ## SDS Data
 
 The `smithscrapr` package also comes with a built-in data set describing the major requirements for SDS.

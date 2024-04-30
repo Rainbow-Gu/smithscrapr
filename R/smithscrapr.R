@@ -14,8 +14,8 @@
 #' Note that for each row, courses appears in one column
 #'
 #' @examples
-#' sds_df <- req_df(sds_list, c("Core", "Capstone"))
-#' print(sds_df)
+#' sds_df <- req_df("sds")
+#' sds_df
 #'
 #' @export
 #'
@@ -380,7 +380,7 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
 #'
 #' @examples
 #' track_1 <- bio_track_matcher(1)
-#' print(track_1)
+#' track_1
 #'
 #' @export
 #'

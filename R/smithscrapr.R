@@ -588,8 +588,8 @@ bio_track_matcher <- function (track) {
       # function for track 5
       bio_t5_df <- data.frame(
         Requirements = c("core", "chem", "sds", "course", "lab", "education", "Outside of major requirement (for license)"),
-        Must = I(list(bio_core, NA, NA, bio_t5_courses_must, bio_t5_lab_must, bio_edu_must, bio_nonbio)),
-        `Choose 1` = I(list(NA, bio_chem_req, bio_sds_req, bio_t5_courses_choose, bio_t5_lab_choose, bio_edu_choose, NA))
+        Must = I(list(bio_core, "", "", bio_t5_courses_must, bio_t5_lab_must, bio_edu_must, bio_nonbio)),
+        `Choose 1` = I(list("", bio_chem_req, bio_sds_req, bio_t5_courses_choose, bio_t5_lab_choose, bio_edu_choose, ""))
       )
       return(bio_t5_df)
     }

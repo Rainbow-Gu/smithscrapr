@@ -15,8 +15,7 @@
 #' Note that for each row, courses appears in one column
 #'
 #' @examples
-#' sds_df <- req_df("sds")
-#' sds_df
+#' req_df("sds")
 #'
 #' @export
 #'
@@ -355,8 +354,10 @@ chem_electives <- chem |>
   html_elements("#chemistry-major ul li") |>
   html_text2()
 
-chem_electives <- c(chem_electives[1], unlist(strsplit(chem_electives[2], ", ")), chem_electives[3])
-chem_electives <-  c(chem_electives[1:5], unlist(strsplit(chem_electives[6], " or ")), chem_electives[7])
+chem_electives <- c(chem_electives[1], unlist(strsplit(chem_electives[2], ", ")),
+                    chem_electives[3])
+chem_electives <-  c(chem_electives[1:5], unlist(strsplit(chem_electives[6], " or ")),
+                     chem_electives[7])
 
 chem_list <- list("Intro (Choice A)" = chem_intro_1a,
                   "Intro (Choice B)" = chem_intro_1b,
@@ -368,7 +369,8 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
 #' @title Make tables for Biology's major requirements
 #'
 #' @description
-#' Given a list of web-scraped major requirements for each five of Biology's tracks, turn it into a cleaned data frame
+#' Given a list of web-scraped major requirements for each five of Biology's tracks, turn it into a
+#' cleaned data frame
 #'
 #' @importFrom rvest html_elements html_text2 read_html
 #' @importFrom stringr str_remove str_split str_extract str_match
@@ -377,7 +379,8 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
 #'
 #' @param track A numeric value 1-5 that represent which track of biology the user is looking for
 #'
-#' @return A data frame that categorizes courses for major requirements under must or choose to take columns
+#' @return A data frame that categorizes courses for major requirements under must or choose to take
+#' columns
 #'
 #' Note that for each row, courses appears in one column
 #'
@@ -449,7 +452,8 @@ bio_track_matcher <- function (track) {
           html_elements(".sc_courseinline:nth-child(24) .code_bubble , .sc_courseinline+ span .sc_courseinline .code_bubble , .sc_courseinline+ span:nth-child(23) , .sc_courseinline:nth-child(22) .code_bubble , .sc_courseinline:nth-child(20) .code_bubble , .sc_courseinline:nth-child(18) .code_bubble , .sc_courseinline:nth-child(16) .code_bubble , .sc_courseinline:nth-child(14) .code_bubble") |>
           html_text2()
 
-        bio_upper_300 <- c(bio_upper_300[1:5], strsplit(bio_upper_300[6], ", ")[[1]], bio_upper_300[7:8])
+        bio_upper_300 <- c(bio_upper_300[1:5], strsplit(bio_upper_300[6], ", ")[[1]],
+                           bio_upper_300[7:8])
         bio_upper_300 <- bio_upper_300[-6]
 
         # choose 3
@@ -590,9 +594,12 @@ bio_track_matcher <- function (track) {
 
       # function for track 5
       bio_t5_df <- data.frame(
-        Requirements = c("core", "chem", "sds", "course", "lab", "education", "Outside of major requirement (for license)"),
-        Must = I(list(bio_core, "", "", bio_t5_courses_must, bio_t5_lab_must, bio_edu_must, bio_nonbio)),
-        `Choose 1` = I(list("", bio_chem_req, bio_sds_req, bio_t5_courses_choose, bio_t5_lab_choose, bio_edu_choose, ""))
+        Requirements = c("core", "chem", "sds", "course", "lab", "education",
+                         "Outside of major requirement (for license)"),
+        Must = I(list(bio_core, "", "", bio_t5_courses_must, bio_t5_lab_must, bio_edu_must,
+                      bio_nonbio)),
+        `Choose 1` = I(list("", bio_chem_req, bio_sds_req, bio_t5_courses_choose, bio_t5_lab_choose,
+                            bio_edu_choose, ""))
       )
       return(bio_t5_df)
     }

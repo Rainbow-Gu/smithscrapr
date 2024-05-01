@@ -10,12 +10,14 @@ bio_track_matcher(track)
 \item{track}{A numeric value 1-5 that represent which track of biology the user is looking for}
 }
 \value{
-A data frame that categorizes courses for major requirements under must or choose to take columns
+A data frame that categorizes courses for major requirements under must or choose to take
+columns
 
 Note that for each row, courses appears in one column
 }
 \description{
-Given a list of web-scraped major requirements for each five of Biology's tracks, turn it into a cleaned data frame
+Given a list of web-scraped major requirements for each five of Biology's tracks, turn it into a
+cleaned data frame
 }
 \examples{
 track_1 <- bio_track_matcher(1)

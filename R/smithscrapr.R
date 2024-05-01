@@ -547,10 +547,10 @@ bio_track_matcher <- function(track) {
       # function for track 1-4
       bio_t_df <- data.frame(
         Requirements = c("core", "chem", "sds", "upper-level", "electives", "labs"),
-        Must = I(list(bio_core, NA, NA, NA, NA, bio_lab_base)),
-        `Choose 1` = I(list(NA, bio_chem_req, bio_sds_req, NA, NA, bio_lab_300)),
-        `Choose 2` = I(list(NA, NA, NA, bio_upper_300, bio_elective, bio_lab_200)),
-        `Choose 3` = I(list(NA, NA, NA, bio_upper_200, NA, NA))
+        Must = I(list(bio_core, "", "", "", "", bio_lab_base)),
+        `Choose 1` = I(list("", bio_chem_req, bio_sds_req, "", "", bio_lab_300)),
+        `Choose 2` = I(list("", "", "", bio_upper_300, bio_elective, bio_lab_200)),
+        `Choose 3` = I(list("", "", "", bio_upper_200, "", ""))
       )
 
       if (track == 1) {

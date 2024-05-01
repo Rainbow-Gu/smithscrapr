@@ -51,26 +51,26 @@ sds_list <- list(Core = sds_core,
 
 
 # function
-req_df <- function (list, must) {
+req_df <- function(list, must) {
   max_length <- max(sapply(list, length))
   for (i in seq_along(list)) {
-    length(list[[i]]) <- max_length}
+    length(list[[i]]) <- max_length
+  }
   df <- data.frame(list, check.names = FALSE)
 
-   pivot_longer(
-    df,
-    cols = everything(),
-    names_to = "Requirement",
-    values_to = "Class"
-  ) |>
+  pivot_longer(
+               df,
+               cols = everything(),
+               names_to = "Requirement",
+               values_to = "Class") |>
     mutate(Must = ifelse(Requirement %in% must, Class, NA_character_),
-           Class = replace(Class, Class == Must, NA_character_)
+      Class = replace(Class, Class == Must, NA_character_)
     ) |>
     select(Requirement, Must, Choose = Class) |>
     filter(!(is.na(Must) & is.na(Choose))) |>
     group_by(Requirement) |>
     summarize(Must = paste(Must[!is.na(Must)], collapse = ", "),
-              Choose = paste(Choose[!is.na(Choose)], collapse = ", ")
+      Choose = paste(Choose[!is.na(Choose)], collapse = ", ")
     )
 }
 

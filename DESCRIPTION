@@ -5,7 +5,7 @@ Authors@R:
     c(person("Rainbow", "Gu", , "rgu@smith.edu", role = c("aut", "cre")),
       person("Nora", "Zhou", , "nzhou@smith.edu", role = "aut"),
       person("Andrea", "Magana", , "amagana@smith.edu", role = "aut"))
-Description: Scrape major requirement from Smith College website for 7 STEM majors. Clean the information to create data frames that help students visualize requirements for each major.
+Description: Major requirements of 7 Smith College STEM majors.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

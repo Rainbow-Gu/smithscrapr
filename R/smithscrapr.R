@@ -109,12 +109,12 @@ sds <- function() {
     html_elements("ol li:nth-child(6) .code_bubble") |>
     html_text2()
 
-  sds_list <- list(Core = sds_core,
-                   Programming = sds_programming,
-                   Statistics = sds_statistics,
-                   Communication = sds_communication,
-                   Application = sds_application,
-                   Capstone = sds_capstone)
+  list(Core = sds_core,
+       Programming = sds_programming,
+       Statistics = sds_statistics,
+       Communication = sds_communication,
+       Application = sds_application,
+       Capstone = sds_capstone)
 }
 
 #' @importFrom rvest html_elements html_text2 read_html
@@ -170,14 +170,14 @@ csc <- function() {
     html_text2()
   ## Function to turn our data.frames into list then into data frames???, making
   ## sure our data frames are also same length as well
-  cs_list <- list(Introduction = cs_intro,
-                  Core = cs_core,
-                  Mathematics = cs_math,
-                  Theory = cs_thoery,
-                  Programming = cs_programming,
-                  System = cs_system,
-                  Level_200 = cs_200,
-                  Level_300 = cs_300)
+  list(Introduction = cs_intro,
+       Core = cs_core,
+       Mathematics = cs_math,
+       Theory = cs_thoery,
+       Programming = cs_programming,
+       System = cs_system,
+       Level_200 = cs_200,
+       Level_300 = cs_300)
 }
 
 #' @importFrom rvest html_elements html_text2 read_html
@@ -203,10 +203,10 @@ eco <- function() {
   econ_seminar <- econ |>
     html_elements("p+ ol > li:nth-child(4)") |>
     html_text2()
-  econ_list <- list(Core = econ_core,
-                    Upper_level = econ_upper,
-                    Electives = econ_electives,
-                    Seminar = econ_seminar)
+  list(Core = econ_core,
+       Upper_level = econ_upper,
+       Electives = econ_electives,
+       Seminar = econ_seminar)
 }
 
 
@@ -240,10 +240,10 @@ ast <- function() {
 
   ast_200_or_300 <- ast_200_or_300[6]
 
-  ast_list <- list(Core = ast_core,
-                   "200" = ast_200,
-                   "300" = ast_300,
-                   "200/300" = ast_200_or_300)
+  list(Core = ast_core,
+       "200" = ast_200,
+       "300" = ast_300,
+       "200/300" = ast_200_or_300)
 }
 
 #' @importFrom rvest html_elements html_text2 read_html
@@ -302,13 +302,13 @@ bch <- function() {
   biochem_elective <- biochem_elective[5]
   biochem_elective <- str_extract(biochem_elective, "A.*")
 
-  biochem_list <- list("Foundation Bio" = biochem_fdn_bio,
-                       "Foundation General Chem" = biochem_fdn_gen_chem,
-                       "Foundation Organic Chem" = biochem_fdn_org_chem,
-                       "Foundation Biochem" = biochem_fnd_biochem,
-                       Physiology = biochem_physiology,
-                       "Upper-level Biochem" = biochem_upper_biochem,
-                       Elective = biochem_elective)
+  list("Foundation Bio" = biochem_fdn_bio,
+       "Foundation General Chem" = biochem_fdn_gen_chem,
+       "Foundation Organic Chem" = biochem_fdn_org_chem,
+       "Foundation Biochem" = biochem_fnd_biochem,
+       Physiology = biochem_physiology,
+       "Upper-level Biochem" = biochem_upper_biochem,
+       Elective = biochem_elective)
 }
 
 #' @importFrom rvest html_elements html_text2 read_html
@@ -361,11 +361,11 @@ chm <- function() {
   chem_electives <-  c(chem_electives[1:5], unlist(strsplit(chem_electives[6], " or ")),
                        chem_electives[7])
 
-  chem_list <- list("Intro (Choice A)" = chem_intro_1a,
-                    "Intro (Choice B)" = chem_intro_1b,
-                    "Courses (choose 3)" = chem_intermediate,
-                    "Advanced Lab (choose 2)" = chem_adv_lab,
-                    "Electives (2-3 to reach 10)" = chem_electives)
+  list("Intro (Choice A)" = chem_intro_1a,
+       "Intro (Choice B)" = chem_intro_1b,
+       "Courses (choose 3)" = chem_intermediate,
+       "Advanced Lab (choose 2)" = chem_adv_lab,
+       "Electives (2-3 to reach 10)" = chem_electives)
 }
 
 #' @title Make tables for Biology's major requirements

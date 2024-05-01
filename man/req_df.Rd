@@ -7,7 +7,7 @@
 req_df(major)
 }
 \arguments{
-\item{character}{A character vector of a major's abbreviation from below: "sds", "csc", "eco",
+\item{major}{A character vector of a major's abbreviation from below: "sds", "csc", "eco",
 "bch", "ast", or "chm". Please put quotation marks around the abbreviations.}
 }
 \value{

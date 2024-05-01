@@ -6,7 +6,7 @@
 #' @importFrom dplyr mutate select filter group_by summarise
 #' @importFrom tidyr pivot_longer
 #'
-#' @param character A character vector of a major's abbreviation from below: "sds", "csc", "eco",
+#' @param major A character vector of a major's abbreviation from below: "sds", "csc", "eco",
 #' "bch", "ast", or "chm". Please put quotation marks around the abbreviations.
 #'
 #' @return A data frame that categorizes courses for major requirements under must or choose to
@@ -375,7 +375,7 @@ chem_list <- list("Intro (Choice A)" = chem_intro_1a,
 #' @importFrom dplyr mutate select filter group_by summarise
 #' @importFrom tidyr pivot_longer
 #'
-#' @param number A numeric value 1-5 that represent which track of biology the user is looking for
+#' @param track A numeric value 1-5 that represent which track of biology the user is looking for
 #'
 #' @return A data frame that categorizes courses for major requirements under must or choose to take columns
 #'

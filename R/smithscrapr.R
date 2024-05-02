@@ -534,8 +534,9 @@ bio_track_matcher <- function(track) {
 
         # choose 1
         bio_lab_300 <- bio |>
-          html_elements("span .sc_courseinline:nth-child(13) .code_bubble , span .sc_courseinline:nth-child(12) .code_bubble , span .sc_courseinline:nth-child(11) .code_bubble , span .sc_courseinline:nth-child(10) .code_bubble , span .sc_courseinline:nth-child(9) .code_bubble , span+ span .sc_courseinline:nth-child(8) .code_bubble") |>
-          html_text2()
+          html_elements("span .sc_courseinline:nth-child(n+8):nth-child(-n+13) .code_bubble") |>
+          html_text2() |>
+          unique()
 
         # choose 2
         bio_lab_200 <- bio |>
@@ -587,7 +588,7 @@ bio_track_matcher <- function(track) {
         html_elements("li span .sc_courseinline:nth-child(5) .code_bubble , li span .sc_courseinline:nth-child(4) .code_bubble , li span .sc_courseinline:nth-child(1) .code_bubble") |>
         html_text2()
       bio_edu_choose <- bio |>
-        html_elements("li span .sc_courseinline:nth-child(3) .code_bubble , li span .sc_courseinline:nth-child(2) .code_bubble") |>
+        html_elements("li span .sc_courseinline:nth-child(n+2):nth-child(-n+3) .code_bubble") |>
         html_text2()
 
       bio_nonbio <- bio |>

@@ -395,7 +395,7 @@ chm <- function() {
 
 bio_track_matcher <- function(track) {
   bio <- read_html("https://www.smith.edu/academics/biological-sciences")
-  if (track == 1 | track == 2 | track == 3 | track == 4 | track == 5) {
+  if (track == 1 || track == 2 || track == 3 || track == 4 || track == 5) {
 
     # must take
     bio_core <- bio |>
